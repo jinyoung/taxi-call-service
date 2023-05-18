@@ -6,7 +6,6 @@ import javax.persistence.*;
 import lombok.Data;
 import taxicall.service.CustomerBookingApplication;
 import taxicall.service.domain.RideBooked;
-import taxicall.service.domain.RideCancelled;
 
 @Entity
 @Table(name = "Booking_table")
@@ -29,9 +28,6 @@ public class Booking {
     public void onPostPersist() {
         RideBooked rideBooked = new RideBooked(this);
         rideBooked.publishAfterCommit();
-
-        RideCancelled rideCancelled = new RideCancelled(this);
-        rideCancelled.publishAfterCommit();
     }
 
     @PrePersist
@@ -42,5 +38,12 @@ public class Booking {
             BookingRepository.class
         );
         return bookingRepository;
+    }
+
+    public void cancelRide(CancelRideCommand cancelRideCommand) {
+        // implementation logic
+        this.setStatus("CANCELLED");
+        RideCancelled rideCancelled = new RideCancelled(this);
+        rideCancelled.publishAfterCommit();
     }
 }

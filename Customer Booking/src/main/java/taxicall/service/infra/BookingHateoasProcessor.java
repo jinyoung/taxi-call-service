@@ -12,6 +12,12 @@ public class BookingHateoasProcessor
 
     @Override
     public EntityModel<Booking> process(EntityModel<Booking> model) {
+        model.add(
+            Link
+                .of(model.getRequiredLink("self").getHref() + "/cancel")
+                .withRel("cancel")
+        );
+
         return model;
     }
 }
